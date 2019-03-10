@@ -57,4 +57,50 @@ class Collection
         $reversed = array_reverse($this->items);
         return $reversed[0] ?? $default;
     }
+
+    /**
+     * @return Collection
+     */
+    public function keys(): self
+    {
+        return new static(array_keys($this->items));
+    }
+
+    /**
+     * @param callable $callback
+     * @return Collection
+     */
+    public function each(callable $callback): self
+    {
+        foreach ($this->items as $key => $item) {
+            $callback($item, $key);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param callable|null $callback
+     * @return Collection
+     */
+    public function filter(callable $callback = null): self
+    {
+        if ($callback) {
+            return new static(array_filter($this->items, $callback));
+        }
+
+        return new static(array_filter($this->items));
+    }
+
+    /**
+     * @param callable $callback
+     * @return Collection
+     */
+    public function map(callable $callback): self
+    {
+        $keys = $this->keys()->all();
+        $items = array_map($callback, $this->items, $keys);
+
+        return new static(array_combine($keys, $items));
+    }
 }
