@@ -1,6 +1,6 @@
 <?php
 
-class Collection
+class Collection implements Countable, IteratorAggregate
 {
     /**
      * @var array
@@ -24,7 +24,7 @@ class Collection
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function count(): int
     {
@@ -127,5 +127,13 @@ class Collection
     public function __toString()
     {
         return $this->toJson();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getIterator(): Traversable
+    {
+        return new ArrayIterator($this->items);
     }
 }
