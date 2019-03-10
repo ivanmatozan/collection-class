@@ -105,6 +105,15 @@ class Collection
     }
 
     /**
+     * @param array $items
+     * @return Collection
+     */
+    public function merge(array $items): self
+    {
+        return new static(array_merge($this->items, $items));
+    }
+
+    /**
      * @return string
      */
     public function toJson(): string
