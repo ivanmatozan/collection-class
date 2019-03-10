@@ -103,4 +103,20 @@ class Collection
 
         return new static(array_combine($keys, $items));
     }
+
+    /**
+     * @return string
+     */
+    public function toJson(): string
+    {
+        return json_encode($this->items) ?: '';
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toJson();
+    }
 }
