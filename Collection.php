@@ -8,11 +8,11 @@ class Collection implements Countable, IteratorAggregate
     protected $items;
 
     /**
-     * @param array $items
+     * @param mixed $items
      */
-    public function __construct(array $items = [])
+    public function __construct($items = [])
     {
-        $this->items = array_values($items);
+        $this->items = is_array($items) ? array_values($items) : $this->getArrayableItems($items);
     }
 
     /**
@@ -105,12 +105,12 @@ class Collection implements Countable, IteratorAggregate
     }
 
     /**
-     * @param array $items
+     * @param mixed $items
      * @return Collection
      */
-    public function merge(array $items): self
+    public function merge($items): self
     {
-        return new static(array_merge($this->items, $items));
+        return new static(array_merge($this->items, $this->getArrayableItems($items)));
     }
 
     /**
@@ -135,5 +135,18 @@ class Collection implements Countable, IteratorAggregate
     public function getIterator(): Traversable
     {
         return new ArrayIterator($this->items);
+    }
+
+    /**
+     * @param $items
+     * @return array
+     */
+    protected function getArrayableItems($items): array
+    {
+        if ($items instanceof self) {
+            return $items->all();
+        }
+
+        return [];
     }
 }
